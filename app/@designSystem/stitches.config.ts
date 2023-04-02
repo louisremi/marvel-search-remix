@@ -45,9 +45,9 @@ export const {
       '8': '2rem',
     },
     radii: {
-      s: '10%',
-      m: '20%',
-      l: '50%',
+      s: '4px',
+      m: '6px',
+      l: '8px',
     },
     fonts: {
       title: '"Anton", sans-serif',
@@ -55,7 +55,7 @@ export const {
       mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     },
     fontSizes: {
-      title: '20px',
+      title: '18px',
       text: '13px',
       caption: '12px',
     },

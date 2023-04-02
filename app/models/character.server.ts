@@ -57,3 +57,27 @@ export async function searchCharacters({
     return emptyResponse;
   }
 }
+
+export async function getCharacter(characterId: string) {
+  const emptyResponse = {
+    offset: 0,
+    limit: 1,
+    total: 0,
+    count: 0,
+    results: [],
+  };
+
+  try {
+    const json = await marvelApi
+      .get(`characters/${characterId}`)
+      .json<{ data: GenericResponseData<Character> }>();
+
+    return json?.data;
+
+    // TODO: handle errors
+  } catch (e) {
+    console.error(e);
+
+    return emptyResponse;
+  }
+}

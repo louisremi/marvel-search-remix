@@ -36,11 +36,12 @@ export const Head = createHead(() => (
 export default function App() {
   return (
     <>
-      <Head />
       <Outlet />
       <ScrollRestoration />
       <Scripts />
       <LiveReload />
+      {/* Head must be rendered after the rest of the DOM when using a CSS-in-JS lib such as Stitches */}
+      <Head />
     </>
   );
 }

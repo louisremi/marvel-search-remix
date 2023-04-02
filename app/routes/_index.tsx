@@ -5,9 +5,7 @@ import {
   useNavigation,
   useSearchParams,
 } from '@remix-run/react';
-import type { VariantProps } from '@stitches/react';
 import { debounce } from 'lodash';
-import type { FC } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Text } from '../@designSystem/Text';
@@ -17,12 +15,12 @@ import { AppContent } from '../layout/AppContent';
 import { AppHeader } from '../layout/AppHeader';
 import { AppWrapper } from '../layout/AppWrapper';
 import { Container } from '../layout/Container';
-import type { Character } from '../models/character.server';
 import { searchCharacters } from '../models/character.server';
+import { CharacterCard } from '../components/character/CharacterCard';
 
 const MIN_SEARCH_LENGTH = 3;
 
-export const meta: V2_MetaFunction = () => [{ title: 'Remix Notes' }];
+export const meta: V2_MetaFunction = () => [{ title: 'Marvel Search Remix' }];
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
@@ -94,39 +92,3 @@ const SearchBox = styled('input', {
   width: '100%',
   padding: '$2',
 });
-
-const CharacterCard: FC<{ character: Character }> = ({ character }) => {
-  const [name, subtitle] = useMemo(
-    () =>
-      character.name.split('(').map((part) => part.replace(/\)$/, '').trim()),
-    [character.name],
-  );
-
-  return (
-    <Flex direction="row" gap="3" css={{ padding: '$2' }} role="listitem">
-      <Avatar
-        src={`${character.thumbnail.path}/standard_medium.${character.thumbnail.extension}`}
-      />
-      <Flex direction="column" gap="1">
-        <Text variant="title">{name}</Text>
-        <Text colorVariant="muted">{subtitle}</Text>
-      </Flex>
-    </Flex>
-  );
-};
-
-const StyledImage = styled('img', {
-  flexShrink: 0,
-  borderRadius: '$m',
-  variants: {
-    size: {
-      m: { size: '50px' },
-    },
-  },
-  defaultVariants: { size: 'm' },
-});
-
-const Avatar: FC<{ src: string } & VariantProps<typeof StyledImage>> = ({
-  src,
-  size,
-}) => <StyledImage src={src} size={size} />;
