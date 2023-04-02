@@ -1,9 +1,14 @@
 import type { LoaderArgs, V2_MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
+import {
+  useLoaderData,
+  useNavigation,
+  useSearchParams,
+} from '@remix-run/react';
 import type { VariantProps } from '@stitches/react';
+import { debounce } from 'lodash';
 import type { FC } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Text } from '../@designSystem/Text';
 import { Flex } from '../@designSystem/Flex';
@@ -33,11 +38,17 @@ export async function loader({ request }: LoaderArgs) {
 export default function Index() {
   const searchBoxRef = useRef<HTMLInputElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const search = useMemo(
+  const setSearchParamsDebounced = useMemo(
+    () => debounce(setSearchParams, 100),
+    [setSearchParams],
+  );
+  const initialSearch = useMemo(
     () => searchParams.get('search') || '',
     [searchParams],
   );
+  const [search, setSearch] = useState(initialSearch);
   const data = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
 
   // focus SearchBox
   useEffect(() => searchBoxRef.current?.focus(), [searchBoxRef]);
@@ -50,15 +61,22 @@ export default function Index() {
           placeholder="Who's you favorite hero?"
           type="text"
           value={search}
-          onChange={(e) => setSearchParams({ search: e.currentTarget.value })}
+          onChange={(e) => {
+            setSearch(e.currentTarget.value);
+            setSearchParamsDebounced({ search: e.currentTarget.value });
+          }}
         />
       </AppHeader>
       <AppContent>
         <Container>
-          {'skipped' in data ? (
-            'Type at least 3 letters to search for a Marvel character'
+          {navigation.state === 'loading' ? (
+            <Text>Searching…</Text>
+          ) : 'skipped' in data ? (
+            <Text>
+              Type at least 3 letters to search for a Marvel character
+            </Text>
           ) : data.results.length === 0 ? (
-            'No results for this search'
+            <Text>No results for this search</Text>
           ) : (
             <Flex direction="column" role="list">
               {data.results.map((character) => (
