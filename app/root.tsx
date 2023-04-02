@@ -20,7 +20,7 @@ export const links: LinksFunction = () => {
     // { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: true },
     {
       rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Anton&family=Inter&display=swap',
+      href: 'https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap',
     },
   ];
 };

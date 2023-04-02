@@ -14,6 +14,7 @@ const StyledImage = styled('img', {
   variants: {
     size: {
       m: { size: '50px' },
+      l: { size: '100px' },
     },
   },
   defaultVariants: { size: 'm' },

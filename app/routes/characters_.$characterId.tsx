@@ -1,4 +1,4 @@
-import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ExternalLinkIcon } from '@radix-ui/react-icons';
 import type { LoaderArgs } from '@remix-run/node';
 import {
   isRouteErrorResponse,
@@ -7,6 +7,10 @@ import {
   useRouteError,
 } from '@remix-run/react';
 import { json } from '@remix-run/server-runtime';
+import { Avatar } from 'app/@designSystem/Avatar';
+import { Box } from 'app/@designSystem/Box';
+import { useParseCharacterName } from 'app/components/character/useParseCharacterName';
+import { useMemo } from 'react';
 import invariant from 'tiny-invariant';
 
 import { Button } from '../@designSystem/Buttons';
@@ -29,21 +33,78 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function CharacterDetailsPage() {
-  const data = useLoaderData<typeof loader>();
+  const { character } = useLoaderData<typeof loader>();
+  const { fullname, disambiguation } = useParseCharacterName(character.name);
+  const detailsUrl = useMemo(
+    () =>
+      character.urls.find(({ type }) => type === 'details') ||
+      character.urls[0],
+    [character.urls],
+  );
   const navigate = useNavigate();
 
   return (
     <AppWrapper>
       <AppHeader>
-        <Flex direction="row" gap="2">
+        <Flex direction="row" align="center" gap="2">
           <Button onClick={() => navigate(-1)}>
             <ChevronLeftIcon />
           </Button>
-          <Text variant="title">{data.character.name}</Text>
+          <Text>{character.name}</Text>
         </Flex>
       </AppHeader>
       <AppContent>
-        <Container>Character</Container>
+        <Container>
+          <Flex direction="row" gap="4">
+            <Avatar
+              src={`${character.thumbnail.path}/standard_medium.${character.thumbnail.extension}`}
+              size="l"
+            />
+            <Flex direction="column" gap="1">
+              <Text variant="title">{fullname}</Text>
+              <Text colorVariant="muted">{disambiguation}</Text>
+              {detailsUrl && (
+                <Text
+                  as="a"
+                  href={detailsUrl.url}
+                  target="_blank"
+                  css={{ color: 'inherit' }}
+                >
+                  Official page{' '}
+                  <ExternalLinkIcon style={{ verticalAlign: 'middle' }} />
+                </Text>
+              )}
+            </Flex>
+          </Flex>
+        </Container>
+
+        <Container>
+          <Text as="h5" css={{ margin: 0, fontWeight: '$semibold' }}>
+            Description
+          </Text>
+          {character.description ? (
+            <Text>{character.description}</Text>
+          ) : (
+            <Text colorVariant="muted" css={{ fontStyle: 'italic' }}>
+              No description
+            </Text>
+          )}
+        </Container>
+        <Container>
+          <Text as="h5" css={{ margin: 0, fontWeight: '$semibold' }}>
+            External links
+          </Text>
+          <Box as="ul" css={{ margin: 0 }}>
+            {character.urls.map(({ type, url }) => (
+              <li key={url}>
+                <Text as="a" href={url} target="_blank">
+                  {type}
+                </Text>{' '}
+                <ExternalLinkIcon style={{ verticalAlign: 'middle' }} />
+              </li>
+            ))}
+          </Box>
+        </Container>
       </AppContent>
     </AppWrapper>
   );

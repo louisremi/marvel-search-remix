@@ -6,7 +6,10 @@ export interface Character {
   description: string;
   modified: string;
   resourceURI: string;
-  urls: string[];
+  urls: {
+    type: string;
+    url: string;
+  }[];
   thumbnail: {
     path: string;
     extension: 'jpg';
