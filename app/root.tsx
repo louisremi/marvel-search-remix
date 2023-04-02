@@ -1,5 +1,4 @@
-import type { LinksFunction, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { LinksFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -7,22 +6,24 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
-import { createHead } from "remix-island";
+} from '@remix-run/react';
+import { createHead } from 'remix-island';
 
-import globalStylesheetUrl from "./styles/index.css";
-import { getUser } from "./session.server";
-import { getCssText } from "./@designSystem/stitches.config";
+import globalStylesheetUrl from './styles/index.css';
+import { getCssText } from './@designSystem/stitches.config';
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: globalStylesheetUrl }];
+  return [
+    { rel: 'stylesheet', href: globalStylesheetUrl },
+    // TODO: figure-out why the typechecker doesn't like those preconnect links
+    // { rel: 'preconnect', href: 'https://fonts.googleapis.com'},
+    // { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: true },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Anton&family=Inter&display=swap',
+    },
+  ];
 };
-
-// export async function loader({ request }: LoaderArgs) {
-//   return json({
-//     user: await getUser(request),
-//   });
-// }
 
 export const Head = createHead(() => (
   <>

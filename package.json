@@ -1,5 +1,6 @@
 {
   "name": "marvel-heroes-remix-2dcc",
+  "type": "commonjs",
   "private": true,
   "sideEffects": false,
   "scripts": {
@@ -22,7 +23,6 @@
     "typecheck": "tsc && tsc -p cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
-  "prettier": {},
   "eslintIgnore": [
     "/node_modules",
     "/build",
@@ -38,6 +38,10 @@
     "@stitches/react": "^1.2.8",
     "bcryptjs": "^2.4.3",
     "isbot": "^3.6.7",
+    "ky": "~0.25",
+    "ky-universal": "~0.8",
+    "lodash": "^4.17.21",
+    "md5-crypto": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-island": "^0.1.2",
@@ -85,7 +89,7 @@
     "vitest": "^0.29.3"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "prisma": {
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
